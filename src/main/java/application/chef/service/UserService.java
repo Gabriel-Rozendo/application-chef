@@ -38,4 +38,20 @@ public class UserService {
     public void deleteUserById(UUID id){
         userRepository.deleteById(id);
     }
+
+    public OutUser updateUser(InUser inUser, UUID id) {
+        Optional<UserModel> userDataBase = userRepository.findById(id);
+
+        if (userDataBase.isEmpty()) {
+            throw new RuntimeException("Usuário não existe");
+        }
+
+        userDataBase.get().setName(inUser.getName());
+        userDataBase.get().setEmail(inUser.getEmail());
+        userDataBase.get().setPassword(inUser.getPassword());
+
+        var userSaved = userRepository.save(userDataBase.get());
+
+        return new OutUser(userSaved.getId(), userSaved.getName(), userSaved.getEmail());
+    }
 }

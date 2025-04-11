@@ -22,6 +22,9 @@ public class UserModel {
         this.password = password;
     }
 
+    public UserModel() {
+    }
+
     public UUID getId() {
         return id;
     }

@@ -40,4 +40,9 @@ public class UserController {
         userService.deleteUserById(id);
     }
 
+    @PutMapping("/{id}")
+    public OutUser updateUser(@RequestBody InUser inUser, @PathVariable UUID id) {
+        return userService.updateUser(inUser, id);
+    }
+
 }
