@@ -30,6 +30,7 @@ public class UserController {
     public List<UserModel> findAllUsers() {
         return userService.findAllUsers();
     }
+
     @GetMapping("/{id}")
     public Optional<UserModel> getById(@PathVariable UUID id){
         return userService.getById(id);

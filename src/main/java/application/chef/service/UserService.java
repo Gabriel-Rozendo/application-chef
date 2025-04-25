@@ -5,6 +5,7 @@ import application.chef.dto.OutUser;
 import application.chef.model.UserModel;
 import application.chef.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,11 +17,14 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public OutUser createUser(InUser inUser) {
+        var hashPassword = passwordEncoder.encode(inUser.getPassword());
         //Salvando o userModel no banco
         var saved = userRepository.save(new UserModel(inUser.getName(), inUser.getEmail(),
-                inUser.getPassword()));
+                hashPassword));
 
         //Retornando o outUser
         return new OutUser(saved.getId(), saved.getName(), saved.getEmail());

@@ -1,5 +1,6 @@
 package application.chef.model;
 
+import application.chef.userPermission.UserPermission;
 import jakarta.persistence.*;
 
 import java.util.UUID;
@@ -12,9 +13,10 @@ public class UserModel {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
     private String name;
+    @Column(unique = true)
     private String email;
     private String password;
-    private String permission;
+    private UserPermission permission;
 
     public UserModel(String name, String email, String password) {
         this.name = name;
@@ -57,11 +59,11 @@ public class UserModel {
         this.password = password;
     }
 
-    public String getPermission() {
+    public UserPermission getPermission() {
         return permission;
     }
 
-    public void setPermission(String permission) {
+    public void setPermission(UserPermission permission) {
         this.permission = permission;
     }
 }
