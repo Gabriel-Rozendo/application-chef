@@ -4,6 +4,7 @@ import application.chef.dto.InUser;
 import application.chef.dto.OutUser;
 import application.chef.model.UserModel;
 import application.chef.service.UserService;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,10 +17,10 @@ import static org.springframework.http.HttpStatus.CREATED;
 
 @RestController
 @RequestMapping("/user")
+@AllArgsConstructor
 public class UserController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
     @PostMapping("/create")
     public ResponseEntity<OutUser> createUser(@RequestBody InUser inUser) {

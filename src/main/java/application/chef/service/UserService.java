@@ -4,9 +4,8 @@ import application.chef.dto.InUser;
 import application.chef.dto.OutUser;
 import application.chef.model.UserModel;
 import application.chef.repository.UserRepository;
+import lombok.AllArgsConstructor;
 import org.hibernate.ObjectNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,10 +13,10 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@AllArgsConstructor
 public class UserService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     public OutUser createUser(InUser inUser) {
         var saved = userRepository.save(new UserModel(inUser.getName(), inUser.getEmail(),
