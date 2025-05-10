@@ -4,6 +4,7 @@ import application.chef.dto.InUser;
 import application.chef.dto.OutUser;
 import application.chef.model.UserModel;
 import application.chef.repository.UserRepository;
+import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -17,18 +18,14 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
     public OutUser createUser(InUser inUser) {
-        var hashPassword = passwordEncoder.encode(inUser.getPassword());
-        //Salvando o userModel no banco
         var saved = userRepository.save(new UserModel(inUser.getName(), inUser.getEmail(),
-                hashPassword));
+                inUser.getPassword()));
 
-        //Retornando o outUser
-        return new OutUser(saved.getId(), saved.getName(), saved.getEmail());
-
+        return new OutUser(saved.getId(),
+                saved.getName(),
+                saved.getEmail());
     }
 
     public List<UserModel> findAllUsers() {
@@ -44,18 +41,20 @@ public class UserService {
     }
 
     public OutUser updateUser(InUser inUser, UUID id) {
-        Optional<UserModel> userDataBase = userRepository.findById(id);
+        var userResponse = userRepository.findById(id);
 
-        if (userDataBase.isEmpty()) {
-            throw new RuntimeException("Usuário não existe");
+        if (userResponse.isEmpty()) {
+            throw new ObjectNotFoundException(UserModel.class, "não encontrado");
         }
 
-        userDataBase.get().setName(inUser.getName());
-        userDataBase.get().setEmail(inUser.getEmail());
-        userDataBase.get().setPassword(inUser.getPassword());
+        userResponse.get().setName(inUser.getName());
+        userResponse.get().setEmail(inUser.getEmail());
+        userResponse.get().setPassword(inUser.getPassword());
 
-        var userSaved = userRepository.save(userDataBase.get());
+        var userSaved = userRepository.save(userResponse.get());
 
-        return new OutUser(userSaved.getId(), userSaved.getName(), userSaved.getEmail());
+        return new OutUser(userSaved.getId(),
+                userSaved.getName(),
+                userSaved.getEmail());
     }
 }

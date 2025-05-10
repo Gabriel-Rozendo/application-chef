@@ -5,25 +5,26 @@ import application.chef.dto.OutUser;
 import application.chef.model.UserModel;
 import application.chef.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static org.springframework.http.HttpStatus.CREATED;
+
 @RestController
 @RequestMapping("/user")
 public class UserController {
-
-    //TODO: DESENVOLVER O PUT PARA ATUALIZAR UM USUARIO
-    //TODO: USAR O DTO EM OUTRAS FUNÇÕES TAMBÉM
 
     @Autowired
     private UserService userService;
 
     @PostMapping("/create")
-    public OutUser createUser(@RequestBody InUser inUser) {
-        return userService.createUser(inUser);
+    public ResponseEntity<OutUser> createUser(@RequestBody InUser inUser) {
+        var user = userService.createUser(inUser);
+        return ResponseEntity.status(CREATED).body(user);
     }
 
     @GetMapping
