@@ -19,12 +19,11 @@ public class UserService {
     private final UserRepository userRepository;
 
     public OutUser createUser(InUser inUser) {
-        var saved = userRepository.save(new UserModel(inUser.getName(), inUser.getEmail(),
-                inUser.getPassword()));
+        var userModel = new UserModel(inUser.getName(), inUser.getEmail(), inUser.getPassword());
+        var userSaved = userRepository.save(userModel);
 
-        return new OutUser(saved.getId(),
-                saved.getName(),
-                saved.getEmail());
+        var outUser = new OutUser(userSaved.getId(), userSaved.getName(), userSaved.getEmail());
+        return outUser;
     }
 
     public List<UserModel> findAllUsers() {
