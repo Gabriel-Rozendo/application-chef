@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static application.chef.validation.UserValidator.validateUserFields;
+
 @Service
 @AllArgsConstructor
 public class UserService {
@@ -19,11 +21,19 @@ public class UserService {
     private final UserRepository userRepository;
 
     public OutUser createUser(InUser inUser) {
-        var userModel = new UserModel(inUser.getName(), inUser.getEmail(), inUser.getPassword());
-        var userSaved = userRepository.save(userModel);
+        //TODO: campos como name, email, password não podem ser vazio
+        //TODO: não podemos criar um usuário com o mesmo email
+        //TODO: validar se o email termina com @...
 
-        var outUser = new OutUser(userSaved.getId(), userSaved.getName(), userSaved.getEmail());
-        return outUser;
+        validateUserFields(inUser);
+
+        var userSaved = userRepository.save(new UserModel(inUser.getName(),
+                inUser.getEmail(),
+                inUser.getPassword()));
+
+        return new OutUser(userSaved.getId(),
+                userSaved.getName(),
+                userSaved.getEmail());
     }
 
     public List<UserModel> findAllUsers() {
